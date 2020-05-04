@@ -1,9 +1,13 @@
 package com.revature.rideshare.controllers;
 
 import com.revature.rideshare.models.User;
+import com.revature.rideshare.services.DistanceService;
 import com.revature.rideshare.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -18,6 +22,9 @@ import java.util.*;
 public class LoginController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    DistanceService distanceService;
 
     @GetMapping
     public Map<String, Set<String>> login(
@@ -45,5 +52,14 @@ public class LoginController {
         } else {
             return errors;
         }
+    }
+
+    @GetMapping("/getGoogleApi")
+    public Map<String, Set<String>> getGoogleApi() {
+        Map<String, Set<String>> info = new HashMap<>();
+        // getting API key
+        String newkey = distanceService.getGoogleMAPKey();
+        info.computeIfAbsent("googleMapAPIKey", key -> new HashSet<>()).add(newkey);
+        return info;
     }
 }
